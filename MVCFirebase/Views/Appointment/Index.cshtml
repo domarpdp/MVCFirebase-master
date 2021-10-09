@@ -1,0 +1,133 @@
+﻿@model IEnumerable<MVCFirebase.Models.Appointment>
+
+@{
+    ViewBag.Title = "Index";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+<script>
+    jQuery(function ($) {
+        $("#startdate").datepicker({
+        }).attr('readonly', 'readonly');
+    });
+</script>
+<h2>Appointments</h2>
+
+
+<table class="table" border="0">
+    <tr>
+
+        @using (Html.BeginForm("","Appointment", FormMethod.Post))
+        {
+
+            <td width="15%">
+                <input class="form-control" name="startdate" type="text" id="startdate" style="width:155px" value="@ViewBag.Message">
+            </td>
+
+            if (User.IsInRole("Receptionist"))
+            { 
+                <td align="left">
+                    <input class="form-control" type="submit" value="Appointments" style="background-color: lightgray; width: 120px"  formaction="/Appointment/Index" formmethod="post"/>
+                </td>
+            }
+        
+            if (User.IsInRole("Chemist") || User.IsInRole("Cashier"))
+            {
+            <td align="left">
+                <input class="form-control" type="submit" value="Waiting" style="width:90px" formaction="/Appointment/Waiting" formmethod="post"/>
+            </td>
+            }
+
+        
+            if (User.IsInRole("Chemist") || User.IsInRole("Cashier"))
+            {
+            <td align="left">
+                <input class="form-control" type="submit" value="Completed" style="width:100px" formaction="/Appointment/Completed" formmethod="post"/>
+            </td>
+            }
+
+        }
+        @using (@Html.BeginForm("Index", "Patient", FormMethod.Post))
+        {
+            if (User.IsInRole("Receptionist"))
+            {
+                <td align="right">
+
+                    <input class="form-control" name="search" type="text" id="search" placeholder="" style="width:100px">
+                </td>
+                <td align="left">
+                    <input type="submit" class="form-control" value="Search" style="width:80px" />
+                </td>
+            }
+        }
+        @if (User.IsInRole("Receptionist"))
+        {
+            <td>
+                <p>
+
+                    @Html.ActionLink("Create New Patient", "Create", "Patient")
+
+                </p>
+            </td>
+        }
+
+    </tr>
+</table>
+<table class="table">
+    <tr>
+        <th>
+
+            Token
+
+        </th>
+        <th>
+
+            Details
+
+        </th>
+        <th>
+            Mobile/UID
+        </th>
+        @*<th>
+            Raised Date
+        </th>*@
+        <th>
+            Status
+        </th>
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.token)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.patient_name) <text>c/o</text> @Html.DisplayFor(modelItem => item.patient_care_of)<br />
+        @Html.DisplayFor(modelItem => item.patient_gender) <text>/</text> @Html.DisplayFor(modelItem => item.patient_age)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.patient_mobile) <br /> @Html.DisplayFor(modelItem => item.patient_id)
+    </td>
+    @*<td>
+        @Html.DisplayFor(modelItem => item.raisedDate) <br /> @Html.DisplayFor(modelItem => item.timeStamp)
+    </td>*@
+
+    <td>
+        @*@Html.DisplayFor(modelItem => item.status)*@-
+        <br />
+        @*@Html.DisplayFor(modelItem => item.status)*@-
+        <br />
+        @*@Html.DisplayFor(modelItem => item.status)*@-
+    </td>
+
+</tr>
+    }
+
+</table>
+
+

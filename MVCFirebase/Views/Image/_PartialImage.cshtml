@@ -1,0 +1,9 @@
+﻿@model MVCFirebase.Models.ImageModel
+
+@if (Model != null && Model.SelectedImage != null)
+{
+    <div>@TempData["CurrentSelectedId"] <text>of</text> @TempData["TotalPrescriptions"]</div>
+    <br />
+    <img src="@Url.Content(Model.SelectedImage.ImageUrl)" alt="Image" height="400" width="400" style="border-width: 5px; border-color: lightblue; border-style: solid;" />
+
+}

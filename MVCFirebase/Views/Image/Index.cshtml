@@ -1,0 +1,321 @@
+﻿@using MVCFirebase.Models
+@model MVCFirebase.Models.ImageModel
+
+@{
+    ViewBag.Title = "Prescriptions";
+    var medicinedata = (IEnumerable<Medicine>)TempData["medicine"];
+}
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+<script type="text/javascript">
+    $(function () {
+        $('.modal-link').click(function () {
+            alert($(this).attr('data-id') + '-both');
+            $('#appId').val($(this).attr('data-id'));
+        });
+        $('.modal-link-medicine').click(function () {
+            //alert($(this).attr('data-id') + 'Chemist only');
+            $('#appointmentAutoIdMedicine').val($(this).attr('data-id'));
+        });
+        $("#Medicine").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Image/AutoComplete/',
+                    data: "{ 'prefix': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+
+                            return {
+                                label: item.label,
+                                value: item.val
+                            };
+                            //return item;
+                        }))
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            change: function (e, i) {
+                //If the No match found" u.item will return null, clear the TextBox.
+                if (i.item == null) {
+                    //Clear the AutoComplete TextBox.
+                    $(this).val("");
+                    return false;
+                }
+            },
+            select: function (e, i) {
+                e.preventDefault();
+                //alert('you have selected ' + i.item.label + ' ID: ' + i.item.value);
+                $("#hfinventoryid").val(i.item.value);
+                $("#hfquantitybalance").val(i.item.label);
+                $(this).val(i.item.label);
+
+            },
+            minLength: 1
+        });
+    });
+</script>
+
+<h2>Index</h2>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Waiting", "Appointment") <br /><text>(Medicine given for <span style="font-size:large">@TempData["days"]</span> days)</text>
+</div>
+<br>
+<table width="100%" border="0">
+
+    <tr>
+        @if (@TempData["inventoryon"].ToString() == "true")
+        {
+            <td width="60%" valign="top">
+
+                <table width="100%">
+                    <tr>
+                        <td>
+                            @using (Html.BeginForm("AddMedicine", "Inventory", FormMethod.Post))
+                            {
+                                if (ViewData["DateType"].ToString() == "CurrentDate")
+                                {
+                                    if (ViewData["FromPage"].ToString() == "Waiting")
+                                    { 
+                                        <table width="100%">
+                                            <tr>
+                                                <td><label>&nbsp;Medicine&nbsp;</label></td>
+                                                <td>
+                                                    <div>
+                                                        @Html.Editor("Medicine", new { htmlAttributes = new { @class = "form-control", placeholder = "Mdeicine Name" } })
+                                                        <input type="hidden" id="hfinventoryid" name="hfinventoryid" />
+                                                        <input type="hidden" id="hfquantitybalance" name="hfquantitybalance" />
+                                                    </div>
+                                                </td>
+                                                <td><label>&nbsp;&nbsp;Quantity&nbsp;&nbsp;</label></td>
+                                                <td>
+                                                    <div>
+                                                        @Html.Editor("Quantity", new { htmlAttributes = new { @class = "form-control", placeholder = "Quantity" } })
+
+                                                    </div>
+                                                </td>
+                                                <td>&nbsp;&nbsp;</td>
+                                                <td>
+                                                    <div>
+                                                        <input type="hidden" value="@TempData["appointmentAutoId"]" id="appointmentAutoId" name="appointmentAutoId" class="btn btn-default" />
+                                                        <input type="hidden" value="@TempData["patientAutoId"]" id="patientAutoId" name="patientAutoId" class="btn btn-default" />
+                                                        <input type="submit" value="Add Medicine" class="btn btn-default" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    }
+                                    
+                                }
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table class="table table-condensed table-hover" border="0" width="100%">
+                                <thead>
+                                    <tr>
+
+                                        <th>Medicine Name</th>
+                                        <th>Quantity</th>
+                                        <th align="right">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var medicine in medicinedata)
+                                    {
+                                        <tr>
+                                            <td>@medicine.medicinename</td>
+                                            <td>@medicine.quantity</td>
+                                            <td>@medicine.Price</td>
+
+                                            <td align="right">
+                                                @using (Html.BeginForm("DeleteMedicine", "Inventory", new { id = medicine.id, appointmentid = @TempData["appointmentAutoId"], patientid = @TempData["patientAutoId"], quantity = medicine.quantity, inventoryid = medicine.inventoryid }, FormMethod.Post))
+                                                {
+                                                    if (ViewData["DateType"].ToString() == "CurrentDate")
+                                                    {
+                                                        if (ViewData["FromPage"].ToString() == "Waiting")
+                                                        {
+                                                            <input type="submit" class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure to delete medicine.')" />
+                                                        }
+
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+
+                                    }
+                                    <tr>
+                                        <td colspan="3" align="right">Consultation Fee = @TempData["fee"]</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" align="right">Total Price = @TempData["TotalPrice"]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    @if (ViewData["DateType"].ToString() == "CurrentDate")
+                    {
+                        if (ViewData["FromPage"].ToString() == "Waiting")
+                        {
+                            <tr>
+                                <td>
+                                    @if (User.IsInRole("Chemist") && User.IsInRole("Cashier"))
+                                    {
+                                        @*<a class="btn btn-info d" data-id="@TempData["appointmentAutoId"]" data-toggle="modal" data-target=".bootstrapmodal">Submit cc</a>*@
+                                        <a class="modal-link" data-id="@TempData["appointmentAutoId"]" data-toggle="modal" data-target=".bootstrapmodal">Submit</a>
+                                    }
+                                    else
+                                    {
+                                        @*<a class="btn btn-info c" data-id="@TempData["appointmentAutoId"]" data-toggle="modal" data-target=".bootstrapmodalFeeOnly">Submit c</a>*@
+                                        <a class="modal-link-medicine" data-id="@TempData["appointmentAutoId"]" data-toggle="modal" data-target=".bootstrapmodalChemistOnly">Submit</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </td>
+        }
+        <td>
+            <fieldset>
+                <div id="dvCategoryResults">
+                    @{
+                        Html.RenderPartial("_PartialImage", Model);
+                    }
+                </div>
+            </fieldset>
+
+            <fieldset>
+                @using (Ajax.BeginForm("GetNextOrPrevImage", "Image", new { SelectedId = Model.SelectedImage },
+                    new AjaxOptions
+                    {
+                        HttpMethod = "Post",
+                        UpdateTargetId = "dvCategoryResults"
+                    }))
+                {
+                    <br />
+                    <input type="submit" value="<" id="btnPrev" name="ButtonType" />
+                    <input type="submit" value=">" id="btnNext" name="ButtonType" />
+                }
+            </fieldset>
+        </td>
+    </tr>
+</table>
+
+@using (Html.BeginForm("CashierChemistUpdateInvOn", "Appointment", FormMethod.Post))
+{
+    <div class="form-horizontal">
+        <div class="modal fade bootstrapmodal">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button data-dismiss="modal" class="close"><span>&times;</span></button>
+                        Please Select Mode of Payment
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                Mode of Payment
+                            </div>
+
+                            <div class="col-md-5">
+                                <select name="modeofpayment" id="modeofpayment">
+                                    <option value="Cash">Cash</option>
+                                    <option value="Debit Card">Debit Card</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="PayTm">PayTm</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <input type="hidden" class="form-control" name="appId" id="appId" value="" />
+
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@using (Html.BeginForm("SubmitChemistInventoryOn", "Appointment", FormMethod.Post))
+{
+    <div class="form-horizontal">
+        <div class="modal fade bootstrapmodalChemistOnly">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button data-dismiss="modal" class="close"><span>&times;</span></button>
+                        Please Select Mode of Payment
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                Mode of Payment
+                            </div>
+
+                            <div class="col-md-5">
+                                <select name="modeofpaymentMedicine" id="modeofpaymentMedicine">
+                                    <option value="Cash">Cash</option>
+                                    <option value="Debit Card">Debit Card</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="PayTm">PayTm</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <input type="hidden" class="form-control" name="appointmentAutoIdMedicine" id="appointmentAutoIdMedicine" value="" />
+
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+
+

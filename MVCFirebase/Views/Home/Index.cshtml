@@ -1,0 +1,385 @@
+﻿@{
+    Layout = null;
+}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <title>Green Paper Technology</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/logo copy.png" />
+</head>
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+<h1></h1>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+</body>
+</style>
+
+<body>
+    <!-- nav bar content -->
+
+    <nav class="navbar navbar-light" style="background-color: rgb(220, 230, 227);">
+        <a class="navbar-brand" href="#home">
+            <img src="../images/logo copy.png" width="40" height="40" class="d-inline-block align-top" alt="" loading="lazy">
+            Green Paper Technology
+        </a>
+        <nav class="navbar navbar-expand-lg style=" background-color: #e3f2fd;>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#home">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about us">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#products">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact us">Contact Us</a>
+                    </li>
+                    @if (User.IsInRole("SuperAdmin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Clinic/index">Clinics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/SuperUser/index">SuperUsers</a>
+                        </li>
+                        @*<li>@Html.ActionLink("Clinics ", "Index", "Clinic")</li>
+                        <li>@Html.ActionLink("SuperUsers ", "Index", "SuperUser")</li>*@
+                    }
+
+                    @if (User.IsInRole("Receptionist"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Patient/index">Patients</a>
+                        </li>
+                        @*<li>@Html.ActionLink("Patients ", "Index", "Patient")</li>*@
+                    }
+                    @if (User.IsInRole("Receptionist") || User.IsInRole("Chemist") || User.IsInRole("Cashier"))
+                    {
+                        if (User.IsInRole("Receptionist"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Appointment/index">Appointments</a>
+                            </li>
+                            @*<li>@Html.ActionLink("Appointments ", "Index", "Appointment")</li>*@
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Waiting/index">Appointments</a>
+                            </li>
+                            @*<li>@Html.ActionLink("Appointments ", "Waiting", "Appointment")</li>*@
+                        }
+
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/User/index">Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/ClinicSetting/index">Settings</a>
+                        </li>
+                        @*<li>@Html.ActionLink("Users ", "Index", "User")</li>
+                            <li>@Html.ActionLink("Settings ", "Index", "ClinicSetting")</li>*@
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+
+                        <li>
+                            @using (Html.BeginForm("Logout", "Home", FormMethod.Post))
+                            {
+                                <a class="nav-link" href="javascript:;" onclick="document.forms[0].submit();">Logout</a>
+                            }
+                        </li>
+
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Home/Login">Log In</a>
+
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+    </nav>
+
+    <!-- green paper banner image -->
+    <img src="../images/BANNER2 copy.jpg" class="card-img-top" alt="...">
+    <!-- home section -->
+    <section id="home">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="text-center container">
+                <h1 class="display-4 text-justified">Home</h1>
+                <p class="lead">
+                    Green Paper Technology is an integrated information system for managing all aspects of a
+                    medical clinic's operations such as medical, financial and administrative. It includes
+                    electronic health records, business intelligence, and revenue cycle management. Medical health facilities
+                    improve the quality of healthcare services, reduce operating costs, and improve the revenue cycle by using such
+                    multi platform systems. Green Paper Technology typically includes Outpatient Management, Pharmacy,
+                    Inventory, eClaim, Mobile Apps, Tablet Versions, Online and Offline Scheduling, Secured Messaging, Doctor and
+                    Patient Portals, Alert Software, Feedback, Biometric Integration and Business Intelligence. Green Paper, allows
+                    users to enter and track
+                    patients, schedule and track patient appointments and patient statements as part of
+                    the collection process and generate reports for the
+                    administrative and clinical staff of the practice. It also involves keeping up to date large sets
+                    of data including lists of diagnosis and procedures.
+                </p>
+                <div class="row row-cols-1 row-cols-md-2">
+                    <div class="col mb-4">
+                        <div class="card">
+                            <img src="../images/601x361b.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Digital Solution</h5>
+                                <p1 class="Boost practice efficiency">
+                                    Boost practice efficiency, Increase revenue, scheduling
+                                    efficiency and patient satisfaction. Securely manage patient records, treatments and prescriptions.
+                                </p1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-4">
+                        <div class="card">
+                            <img src="../images/602x362c.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">User Friendly</h5>
+                                <p1 class="Boost practice efficiency">
+                                    Reduce needless waiting and increase revenue with efficient patient
+                                    intake.
+                                    Provide a paperless experience that delights patients while staying compliant with MCI guidelines and
+                                    the law.
+                                </p1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <hr>
+    <!-- about us -->
+    <div>
+        <div id="about us" class="text-center container">
+            <h1 class="display-4 text-justified">About Us</h1>
+            <p class="lead">
+                There is a lot you can get from Green Paper Technology but as per your need we make everything simple
+                for you. We realised that software should ease the activity but to achieve a lot companies make it too complicated.
+                We focused on the the core problem and made green paper, a multi platform app and web based software. Somethime for
+                a very big problem there is very tiny solution, we just found that after a lot of research and hardwork.It Boost
+                practice efficiency, Increase revenue, scheduling efficiency and patient satisfaction. Securely manage patient
+                records, treatments and prescriptions. It also Reduce needless waiting and increase revenue with efficient patient
+                intake. Provide a paperless experience that delights patients while staying compliant with MCI guidelines and the
+                law.
+            </p>
+            <img src="../images/Group 7.png" width="100" height="100" class="d-inline-block align-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Statistics</h5>
+                <p1 class="card-title">
+                    Clinic's growth like number of patients, average, daily money collection, AI to anticipate
+                    your growth, patient classification in terms of disease, city, gender etc. It will help admin to measure their
+                    growth rate.
+                </p1>
+                <hr>
+                <img src="../images/Group 3.png" width="100" height="100" class="d-inline-block align-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Digital Solution</h5>
+                    <p1 class="card-title">
+                        Green Paper as its name says a green and digital solution for clinics. No worries about
+                        prescription pads and lots of stationary. Now with green paper avail error free digital solution for your clinic
+                        management.
+                    </p1>
+                    <hr>
+                    <img src="../images/Group 9.png" width="100" height="100" class="d-inline-block align-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Cloud Backups</h5>
+                        <p1 class="card-title">
+                            Never loose your sensitive data by cloud backup with green paper technology. It helps
+                            clinics to function online as well as in offline mode. The time you come online it will automatically upload
+                            entire data without any hassel.
+                        </p1>
+                    </div>
+                </div>
+
+                <hr>
+                <div id="products" class="jumbotron jumbotron-fluid">
+                    <div class="text-center container">
+                        <h1 class="display-4 text-justified">Products</h1>
+                        <p class="lead">
+                            User friendly interface
+                            -Medicine inventory management
+                            -100% accurate billing
+                            -24x7 coustmer service
+                            -Secure data in case device malfunction
+                            -Strict data privacy policies
+                            -Rational statistics
+                            -No commitments, cancel anytime.
+                            -No ads and no extra fees. Ever.
+                            -Avail conventional messages
+                        </p>
+                        <div class="row row-cols-1 row-cols-md-2">
+                            <div class="col mb-4">
+                                <div class="card">
+                                    <img src="../images/Group 36.png" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">For Single Users</h5>
+                                        <p class="card-text">
+                                            Patient record keeping
+                                            -Keep an eye on your income
+                                            -Analysis your clinic’s growth
+                                            -Free updates on current versions
+                                            -Reminder for prescriptions
+                                            -Anual subscribtion to keep your data safe
+                                            -Both Online and Offline mode
+                                            -Share prescription automatically to patients
+                                            -Discount on upgraded plans
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col mb-4">
+                                <div class="card">
+                                    <img src="../images/Group 37.png" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">For Double Users</h5>
+                                        <p class="card-text">
+                                            Patient record keeping
+                                            -Keep an eye on your income. Generate bills
+                                            -Analysis your clinic’s growth.
+                                            -Free updates for new versions
+                                            -Anual subscribtion to keep your data safe
+                                            -Both Online and Offline mode
+                                            -Share prescription automatically to patients
+                                            -Discount on upgraded plans
+                                            -Data sharing
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col mb-4">
+                                <div class="card">
+                                    <img src="../images/Group 39.png" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">For Triple Users</h5>
+                                        <p class="card-text">
+                                            Patient record keeping
+                                            -Keep an eye on your income
+                                            -Analysis your clinic’s growth
+                                            -Free updates
+                                            -Anual subscribtion to keep your data safe
+                                            -Both Online and Offline mode
+                                            -Share prescription to patients
+                                            -Discount on upgraded plans
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col mb-4">
+                                <div class="card">
+                                    <img src="../images/Group 41.png" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">For Multipul Users</h5>
+                                        <p class="card-text">
+                                            Patient record keeping
+                                            -Keep an eye on your income
+                                            -Analysis your clinic’s growth
+                                            -Free updates
+                                            -Annual subscribtion to keep your data safe
+                                            -Both Online and Offline mode
+                                            -Share msg & prescription automatically to patients
+                                            -Avail free services
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <img src="../images/phone.gif" width="80" height="60" class="rounded mx-auto d-block" alt="Image">
+                <div id="contact us" class="text-center container">
+                    <h1 class="display-4 text-justified">Contact Us</h1>
+                    <p class="lead">
+                        You can e-mail us at info@greenpapertechnology or you can share your information and our
+                        excuxitive will call you within 24 hours. You can also text us on our what's app number +91-9876543210
+                    </p>
+                    <form>
+                        <div class="form-group">
+                            <input type="Name" class="form-check-label" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                   placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                            <input type="Mobile no" class="form-check-label" id="exampleInputPassword1" placeholder="Mobile No">
+                        </div>
+                        <small id="emailHelp" class="form-text text-muted">We never share your information to second party.</small>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">I am a Doctor</label>
+                        </div>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Call me now</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <br>
+            <hr>
+            <nav class="navbar navbar-light" style="background-color: rgb(255, 255, 255);">
+                <a class="navbar-brand" href="#home">
+                    <img src="../images/logo copy.png" width="40" height="40" class="d-inline-block align-top" alt="" loading="lazy">
+                    Green Paper Technology
+                </a>
+
+                <body>
+                    <style>
+                        a {
+                            text-decoration: none;
+                            color: rgb(77, 85, 94);
+                            font-size: small;
+                        }
+                    </style>
+                    <small>© 2020 Green Paper</small>
+                    <small>Downloads</small>
+                    <a href="/Home/privacy">Privacy Policy</small></a>
+                    <a href="/Home/term">Terms & Conditions</small></a>
+                </body>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+</html>

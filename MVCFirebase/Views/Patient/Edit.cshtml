@@ -1,0 +1,208 @@
+﻿@model MVCFirebase.Models.Patient
+
+@{
+    ViewBag.Title = "Edit";
+}
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@if (@ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            $(function () {
+                alert("@ViewBag.Message")
+            });
+    </script>
+}
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" rel="Stylesheet" type="text/css" />
+<script type="text/javascript">
+    $(function () {
+        $("#city").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Patient/cityautocomplete/',
+                    data: "{ 'city': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+
+                            return {
+                                label: item.name,
+                                value: item.name
+                            };
+                            //return item;
+                        }))
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            change: function (e, i) {
+                //If the No match found" u.item will return null, clear the TextBox.
+                //if (i.item == null) {
+                //    //Clear the AutoComplete TextBox.
+                //    $(this).val("");
+                //    return false;
+                //}
+            },
+            select: function (e, i) {
+                e.preventDefault();
+                //alert('you have selected ' + i.item.label + ' ID: ' + i.item.value);
+                //$("#hfinventoryid").val(i.item.value);
+                //$("#hfquantitybalance").val(i.item.label);
+                $(this).val(i.item.value);
+
+            },
+            minLength: 1
+        });
+    });
+</script>
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Patient</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.patient_name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.patient_name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.patient_name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.care_of, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.care_of, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.care_of, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.patient_mobile_number, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.patient_mobile_number, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.patient_mobile_number, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.age, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.age, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.age, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.city, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.Editor("city", new { htmlAttributes = new { @class = "form-control", placeholder = "city" } })
+            @Html.ValidationMessageFor(model => model.city, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.gender, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            Male
+            @Html.RadioButtonFor(m => m.gender, "Male", new { Checked = "checked", id = "Male" })
+            Female
+            @Html.RadioButtonFor(m => m.gender, "Female", new { id = "Female" })
+            Other
+            @Html.RadioButtonFor(m => m.gender, "Other", new { id = "Other" })
+        </div>
+
+    </div>
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.gender, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.gender, (IEnumerable<SelectListItem>)ViewBag.GENDERS, new { @class = "select2_demo_4 form-control" })
+                @Html.ValidationMessageFor(model => model.gender, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+    <div class="form-group">
+        @Html.Label("Categarization", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            Green
+            @Html.RadioButtonFor(m => m.severity, "Low", new { Checked = "checked", id = "Loq" })
+            Yellow
+            @Html.RadioButtonFor(m => m.severity, "Medium", new { id = "Medium" })
+            Red
+            @Html.RadioButtonFor(m => m.severity, "High", new { id = "High" })
+        </div>
+
+    </div>
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.severity, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.severity, (IEnumerable<SelectListItem>)ViewBag.SEVERITIES, new { @class = "select2_demo_4 form-control" })
+                @Html.ValidationMessageFor(model => model.severity, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+
+
+
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.disease, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.disease, (IEnumerable<SelectListItem>)ViewBag.DISEASES, new { @class = "select2_demo_4 form-control" })
+            @Html.ValidationMessageFor(model => model.disease, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.refer_by, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.refer_by, (IEnumerable<SelectListItem>)ViewBag.REFERBYS, new { @class = "select2_demo_4 form-control" })
+            @Html.ValidationMessageFor(model => model.refer_by, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.refer_to_doctor, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.refer_to_doctor, (IEnumerable<SelectListItem>)ViewBag.USERS, new { @class = "select2_demo_4 form-control" })
+            @Html.ValidationMessageFor(model => model.refer_to_doctor, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.creation_date)
+    @Html.HiddenFor(model => model.patient_id)
+    @Html.HiddenFor(model => model.appointment_date)
+    @Html.HiddenFor(model => model.tokenNumber)
+    <br />
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

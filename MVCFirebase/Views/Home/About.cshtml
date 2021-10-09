@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+<h2>@ViewBag.Title.</h2>
+
+<h3> Login History</h3>
+<p>Current User: @ViewBag.CurrentUser</p>
+
+<ul>
+
+    @foreach(var timestamp in ViewBag.Logins){
+        <li>
+
+            Login at @timestamp
+        </li>
+
+    }
+</ul>

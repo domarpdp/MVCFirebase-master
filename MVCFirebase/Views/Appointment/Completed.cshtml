@@ -1,0 +1,187 @@
+﻿@model IEnumerable<MVCFirebase.Models.Appointment>
+
+@{
+    ViewBag.Title = "Completed";
+}
+
+<table width="100%" border="0">
+    <tr>
+        <td><h2>Completed Appointments</h2></td>
+        @if (User.IsInRole("Cashier"))
+        {
+        <td align="right"><h5>Total Fee:</h5></td>
+        <td>@ViewData["totalfee"]</td>
+        <td align="right"><h5>Total Fee(Cash):</h5></td>
+        <td>@ViewData["totalfeecash"]</td>
+        <td align="right"><h5>Total Fee Others:</h5></td>
+        <td>@ViewData["totalfeeothers"]</td>
+        }
+
+    </tr>
+</table>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+<script>
+    jQuery(function ($) {
+        $("#startdate").datepicker({
+        }).attr('readonly', 'readonly');
+    });
+</script>
+
+<table class="table" border="0">
+    <tr>
+
+        @using (Html.BeginForm())
+        {
+
+            <td width="15%">
+                <input class="form-control" name="startdate" type="text" id="startdate" style="width:150px" value="@ViewBag.Message">
+            </td>
+
+            if (User.IsInRole("Receptionist") && (User.IsInRole("Chemist") || User.IsInRole("Cashier")))
+            {
+                <td align="left">
+                    <input class="form-control" type="submit" value="Appointments" style="width:120px" formaction="Index" formmethod="post" />
+                </td>
+            }
+
+            if (User.IsInRole("Chemist") || User.IsInRole("Cashier"))
+            {
+                <td align="left">
+                    <input class="form-control" type="submit" value="Waiting" style="width:90px" formaction="Waiting" formmethod="post" />
+                </td>
+            }
+
+
+            if (User.IsInRole("Chemist") || User.IsInRole("Cashier"))
+            { 
+                <td align="left">
+                    <input class="form-control" type="submit" value="Completed" style="background-color:lightgray;width: 100px" formaction="Completed" formmethod="post" />
+                </td>
+            }
+
+        }
+        @using (@Html.BeginForm("Index", "Patient", FormMethod.Post))
+        {
+            if (User.IsInRole("Receptionist"))
+            {
+                <td align="right">
+
+                    <input class="form-control" name="search" type="text" id="search" placeholder="" style="width:100px">
+                </td>
+                <td align="left">
+                    <input type="submit" class="form-control" value="Search" style="width:80px" />
+                </td>
+            }
+        }
+        @if (User.IsInRole("Receptionist"))
+        {
+            <td>
+                <p>
+
+                    @Html.ActionLink("Create New Patient", "Create", "Patient")
+
+                </p>
+            </td>
+        }
+
+    </tr>
+</table>
+<table class="table">
+    <tr>
+        <th>
+
+            Token
+
+        </th>
+        <th>
+
+            Details
+
+        </th>
+        <th>
+            Mobile/UID
+        </th>
+
+        <th>
+            Status
+        </th>
+        @if (User.IsInRole("Chemist"))
+        {
+            <th>
+                Prescription
+            </th>
+        }
+        @if (User.IsInRole("Cashier"))
+        {
+            <th>
+                Fee
+            </th>
+        }
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.token)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.patient_name) <text>c/o</text> @Html.DisplayFor(modelItem => item.patient_care_of)<br />
+                @Html.DisplayFor(modelItem => item.patient_gender) <text>/</text> @Html.DisplayFor(modelItem => item.patient_age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.patient_mobile) <br /> @Html.DisplayFor(modelItem => item.patient_id)
+            </td>
+
+            <td>
+                @if (User.IsInRole("Chemist") && User.IsInRole("Cashier"))
+                {
+                    <text>Doc</text>
+                    <br />
+                    <text>Chemist</text>
+                    <br />
+                    <text>Cash</text>
+                }
+                else if (User.IsInRole("Cashier"))
+                {
+                    <text>Doc</text>
+                    <br />
+                    <text>-</text>
+                    <br />
+                    <text>Cash</text>
+                }
+                else if (User.IsInRole("Chemist"))
+                {
+                    <text>Doc</text>
+                    <br />
+                    <text>Chemist</text>
+                    <br />
+                    <text>-</text>
+                }
+
+            </td>
+            @if (User.IsInRole("Chemist"))
+            {
+                <td>
+                    @Html.ActionLink("ViewPresc", "Index", "Image", new { @item.id, @item.patient }, new { @item.id, @item.patient })
+                </td>
+            }
+            @if (User.IsInRole("Cashier"))
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.fee)
+                </td>
+            }
+
+        </tr>
+    }
+
+</table>

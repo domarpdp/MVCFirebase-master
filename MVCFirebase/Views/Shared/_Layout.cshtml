@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title Grren Paper Technology</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/Home/Index" class="navbar-brand"> <img src="~/Images/logo copy.png" alt="Company logo" width="30" height="30" class="d-inline-block align-top" /></a>
+                @Html.ActionLink("Green Paper Technology", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    @if (User.IsInRole("SuperAdmin"))
+                    {
+                        <li>@Html.ActionLink("Clinics", "Index", "Clinic")</li>
+                        <li>@Html.ActionLink("SuperUsers", "Index", "SuperUser")</li>
+                    }
+
+                    @if (User.IsInRole("Receptionist"))
+                    {
+                        <li>@Html.ActionLink("Patients", "Index", "Patient")</li>
+                    }
+                    @if (User.IsInRole("Receptionist") || User.IsInRole("Chemist") || User.IsInRole("Cashier"))
+                    {
+                        if (User.IsInRole("Receptionist"))
+                        {
+                            <li>@Html.ActionLink("Appointments", "Index", "Appointment")</li>
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Appointments", "Waiting", "Appointment")</li>
+                        }
+
+                    }
+                    @if (User.IsInRole("Chemist"))
+                    {
+                        <li>@Html.ActionLink("Inventory", "Index", "Inventory")</li>
+                    }
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Users", "Index", "User")</li>
+                        <li>@Html.ActionLink("Settings", "Index", "ClinicSetting")</li>
+                    }
+                </ul>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a class="nav-link" href="#"><span class="glyphicon glyphicon-user"></span><b>@HttpContext.Current.User.Identity.Name.Split('-')[1]</b></a></li>
+                        <li>
+                            @using (Html.BeginForm("Logout", "Home", FormMethod.Post))
+                            {
+                                <a class="nav-link" href="javascript:;" onclick="document.forms[0].submit();"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
+                            }
+                        </li>
+                    </ul>
+                }
+                else
+                {
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                @Html.ActionLink("Login", "Login", "Home")
+                @*@using (Html.BeginForm("Login", "Home", FormMethod.Post))
+        {
+            <a href="javascript:;" onclick="document.forms[0].submit();"><span class="glyphicon glyphicon-log-in"></span>Log In</a>
+        }*@
+                </li>
+            </ul>
+                }
+            </div>
+            @*<div class="navbar-collapse collapse">
+                Welcome :
+                <b>@HttpContext.Current.User.Identity.Name</b>
+                @using (Html.BeginForm("Logout", "Home", FormMethod.Post))
+                {
+                    <a href="javascript:;" onclick="document.forms[0].submit();">Logout</a>
+                }
+            </div>*@
+
+            
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Green Paper Technology</p>
+        </footer>
+    </div>
+
+    
+    @RenderSection("scripts", required: false)
+</body>
+</html>

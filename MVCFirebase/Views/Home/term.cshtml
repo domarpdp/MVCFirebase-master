@@ -1,0 +1,261 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <title>Terms and conditions</title>
+</head>
+
+<body>
+    <h1></h1>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
+</body>
+<!-- Image and text -->
+
+<nav class="navbar navbar-light" style="background-color: rgb(220, 230, 227);">
+    <a class="navbar-brand" href="#home">
+        <img src="../images/logo copy.png" width="40" height="40" class="d-inline-block align-top" alt="" loading="lazy">
+        Green Paper Technology
+    </a>
+    <nav class="navbar navbar-expand-lg style=" background-color: #e3f2fd;>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index#about us">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index">Contact Us</a>
+                </li>
+                @if (User.IsInRole("SuperAdmin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Clinic/index">Clinics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/SuperUser/index">SuperUsers</a>
+                    </li>
+                    @*<li>@Html.ActionLink("Clinics ", "Index", "Clinic")</li>
+                    <li>@Html.ActionLink("SuperUsers ", "Index", "SuperUser")</li>*@
+                }
+
+                @if (User.IsInRole("Receptionist"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Patient/index">Patients</a>
+                    </li>
+                    @*<li>@Html.ActionLink("Patients ", "Index", "Patient")</li>*@
+                }
+                @if (User.IsInRole("Receptionist") || User.IsInRole("Chemist") || User.IsInRole("Cashier"))
+                {
+                    if (User.IsInRole("Receptionist"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Appointment/index">Appointments</a>
+                        </li>
+                        @*<li>@Html.ActionLink("Appointments ", "Index", "Appointment")</li>*@
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Waiting/index">Appointments</a>
+                        </li>
+                        @*<li>@Html.ActionLink("Appointments ", "Waiting", "Appointment")</li>*@
+                    }
+
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="/User/index">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ClinicSetting/index">Settings</a>
+                    </li>
+                    @*<li>@Html.ActionLink("Users ", "Index", "User")</li>
+            <li>@Html.ActionLink("Settings ", "Index", "ClinicSetting")</li>*@
+                }
+                @if (User.Identity.IsAuthenticated)
+                {
+
+                    <li>
+                        @using (Html.BeginForm("Logout", "Home", FormMethod.Post))
+                        {
+                            <a class="nav-link" href="javascript:;" onclick="document.forms[0].submit();">Logout</a>
+                        }
+                    </li>
+
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Home/Login">Log In</a>
+
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+</nav>
+<div id="about us" class="text-justify container">
+    <h1 class="display-6 text-left">Green Paper Technology Terms & Conditions</h1>
+    <hr>
+    <p class="lead">
+        Respect for your privacy is coded into our DNA. Since we started, we’ve aspired to build
+        our Services with a set of strong privacy principles in mind.
+        When we say “Green Paper Technology,” “our,” “we,” or “us,” we’re talking about Green Paper Technology. This
+        Privacy Policy (“Privacy
+        Policy”) applies to all of our apps, services, features, software, and website (together, “Services”) unless
+        specified otherwise.
+        Please also read Green Paper Technology Terms of Service (“Terms”), which describes the terms under which you
+        use our
+        Services.
+    </p>
+    <br>
+    <h3 class="display-20 text-left">About our services</h3>
+    <p class="lead">
+        Green Paper Technology receives or collects information when we operate and provide our Services,
+        including when you install, access, or use our Services.
+    </p>
+    <p class="lead">
+        Registration: <br> You must register for our Services using accurate data, provide your current
+        mobile phone number, and, if you change it, update this mobile phone number using our in-app change number
+        feature. You agree to receive text messages and phone calls (from us or our third-party providers) with codes to
+        register for our Services.
+    </p>
+    <p class="lead">
+        Devices and Software: <br>You must provide certain devices, software, and data connections to use
+        our Services, which we otherwise do not supply. For as long as you use our Services, you consent to downloading
+        and installing free updates to our Services, including automatically. There are more paid updates available.
+    </p>
+    <p class="lead">
+        Age and Documents: <br>You must be at least 18 years old to use this app. This app is for
+        professionals and have
+        sensitive information about the user and his business. You admit that you will provide your age proof along with
+        other required documents during sign up process.
+    </p>
+    <p class="lead">
+        Fees and Taxes: <br>You are responsible for all carrier data plan and other fees and taxes
+        associated with your use of our Services. We will charge you one time payment for the app for current version.
+        And for our Services like SMS and Yearly subscription we will charge you (including applicable taxes) according
+        to
+        the plan you choose which can be changed by us any time. We may
+        stop your app or services if payments are not being paid timely. We do not provide refunds for our Services,
+        except as required by
+        law.
+    </p>
+    <br>
+
+    <h3 class="display-20 text-left">Acceptable Use of Our Services</h3>
+    <p class="lead">
+        Legal and Acceptable Use: <br> You must access and use our Services only for legal, authorized, and
+        acceptable purposes. You will not use (or assist others in using) our Services in ways that: (a) violate,
+        misappropriate, or infringe the rights of Green Paper Technology, our users, or others, including privacy,
+        publicity,
+        intellectual property, or other proprietary rights; (b) are illegal, obscene, defamatory, threatening,
+        intimidating, harassing, hateful, racially, or ethnically offensive, or instigate or encourage conduct that
+        would be illegal, or otherwise inappropriate, including promoting violent crimes; (c) involve publishing
+        falsehoods, misrepresentations, or misleading statements; (d) impersonate someone; (e) involve sending illegal
+        or impermissible communications such as bulk messaging, auto-messaging, auto-dialing, and the like; or (f)
+        involve any non-personal use of our Services unless otherwise authorized by us.
+    </p>
+    <p class="lead">
+        Keeping Your Account Secure: <br> You are responsible for keeping your device and your Green Paper
+        Technology
+        account safe and secure, and you must notify us promptly of any unauthorized use or security breach of your
+        account or our Services. We will not responsible for any data loss occured by users' negligence, although we
+        will always try to reverse such loss on request.
+    </p>
+    <p class="lead">
+        Our Terms and Policies: <br> You must use our Services according to our Terms and posted policies.
+        If we disable your account for a violation of our Terms, you will not create another account without our
+        permission.
+    </p>
+    <br>
+    <h3 class="display-20 text-left">Disclaimers</h3>
+    <p class="lead">
+        YOU USE OUR SERVICES AT YOUR OWN RISK AND SUBJECT TO THE FOLLOWING DISCLAIMERS. WE ARE PROVIDING OUR
+        SERVICES ON AN “AS IS” BASIS WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+        WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, AND FREEDOM FROM
+        COMPUTER VIRUS OR OTHER HARMFUL CODE. WE DO NOT WARRANT THAT ANY INFORMATION PROVIDED BY US IS ACCURATE,
+        COMPLETE, OR USEFUL, THAT OUR SERVICES WILL BE OPERATIONAL, ERROR FREE, SECURE, OR SAFE, OR THAT OUR SERVICES
+        WILL FUNCTION WITHOUT DISRUPTIONS, DELAYS, OR IMPERFECTIONS. WE DO NOT CONTROL, AND ARE NOT RESPONSIBLE FOR,
+        CONTROLLING HOW OR WHEN OUR USERS USE OUR SERVICES OR THE FEATURES, SERVICES, AND INTERFACES OUR SERVICES
+        PROVIDE. WE ARE NOT RESPONSIBLE FOR AND ARE NOT OBLIGATED TO CONTROL THE ACTIONS OR INFORMATION (INCLUDING
+        CONTENT) OF OUR USERS OR OTHER THIRD PARTIES. YOU RELEASE US, OUR SUBSIDIARIES, AFFILIATES, AND OUR AND THEIR
+        DIRECTORS, OFFICERS, EMPLOYEES, PARTNERS, AND AGENTS (TOGETHER, THE “GREEN PAPER TECHNOLOGY”) FROM ANY CLAIM,
+        COMPLAINT, CAUSE OF ACTION, CONTROVERSY, OR DISPUTE (TOGETHER, “CLAIM”) AND DAMAGES, KNOWN AND UNKNOWN, RELATING
+        TO, ARISING OUT OF, OR IN ANY WAY CONNECTED WITH ANY SUCH CLAIM YOU HAVE AGAINST ANY THIRD PARTIES.
+    </p>
+    <br>
+    <h3 class="display-20 text-left">Limitation of liability</h3>
+    <p class="lead">
+        THE GREEN PAPER TECHNOLOGY PARTIES WILL NOT BE LIABLE TO YOU FOR ANY LOST PROFITS OR CONSEQUENTIAL,
+        SPECIAL,
+        PUNITIVE, INDIRECT, OR INCIDENTAL DAMAGES RELATING TO, ARISING OUT OF, OR IN ANY WAY IN CONNECTION WITH OUR
+        TERMS, US, OR OUR SERVICES, EVEN IF THE WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THE FOREGOING
+        DISCLAIMER OF CERTAIN DAMAGES AND LIMITATION OF LIABILITY WILL APPLY TO THE MAXIMUM
+        EXTENT PERMITTED BY APPLICABLE LAW. THE LAWS OF SOME STATES OR JURISDICTIONS MAY NOT ALLOW THE EXCLUSION OR
+        LIMITATION OF CERTAIN DAMAGES, SO SOME OR ALL OF THE EXCLUSIONS AND LIMITATIONS SET FORTH ABOVE MAY NOT APPLY TO
+        YOU. NOTWITHSTANDING ANYTHING TO THE CONTRARY IN OUR TERMS, IN SUCH CASES, THE LIABILITY OF THE GREEN PAPER
+        TECHNOLOGY PARTIES
+        WILL BE LIMITED TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW.
+    </p>
+    <br>
+    <h3 class="display-20 text-left">Availability and termination of our services</h3>
+    <p class="lead">
+        Availability of Our Services: <br> Our Services may be interrupted, including for maintenance,
+        repairs, upgrades, or network or equipment failures. We may discontinue some or all of our Services, including
+        certain features and the support for certain devices and platforms, at any time. Events beyond our control may
+        affect our Services, such as events in nature and other force majeure events.
+    </p>
+    <p class="lead">
+        Termination: <br> We may modify, suspend, or terminate your access to or use of our Services anytime
+        for any reason, such as if you violate the letter or spirit of our Terms or create harm, risk, or possible legal
+        exposure for us, our users, or others.
+    </p>
+    <br>
+    <h3 class="display-20 text-left">Other</h3>
+    <p class="lead">
+        We can change the privacy policy and terms and conditions anytime.
+        <br>
+        We can sell our any product on sale or on discount or completly free which you can not complain.
+        <br>
+    </p>
+
+</div>
+</div>
+
+</html>

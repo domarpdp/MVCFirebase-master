@@ -1,0 +1,309 @@
+﻿@model IEnumerable<MVCFirebase.Models.Appointment>
+
+@{
+    ViewBag.Title = "Waiting ";
+}
+
+<h2>Waiting Appointments</h2>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+<script>
+    jQuery(function ($) {
+        $("#startdate").datepicker({
+        }).attr('readonly', 'readonly');
+
+
+        $('.modal-link').click(function () {
+            //alert($(this).attr('data-id') + 'both');
+            $('#appointmentAutoId').val($(this).attr('data-id'));
+        });
+        $('.modal-link-feeonly').click(function () {
+            //alert($(this).attr('data-id') + 'fee only');
+            $('#appointmentAutoIdFee').val($(this).attr('data-id'));
+        });
+    });
+</script>
+
+<table class="table" border="0">
+    <tr>
+
+        @using (Html.BeginForm())
+        {
+
+            <td width="15%">
+                <input class="form-control" name="startdate" type="text" id="startdate" style="width:150px" value="@ViewBag.Message">
+            </td>
+
+            if (User.IsInRole("Receptionist") && (User.IsInRole("Chemist") || User.IsInRole("Cashier")))
+            {
+                <td align="left">
+                    <input class="form-control" type="submit" value="Appointments" style="width:120px" formaction="Index" formmethod="post" />
+                </td>
+            }
+
+            if (User.IsInRole("Chemist") || User.IsInRole("Cashier"))
+            {
+                <td align="left">
+                    <input class="form-control" type="submit" value="Waiting" style="background-color: lightgray;width: 90px" formaction="Waiting" formmethod="post" />
+                </td>
+            }
+
+
+            if (User.IsInRole("Chemist") || User.IsInRole("Cashier"))
+            {
+                <td align="left">
+                    <input class="form-control" type="submit" value="Completed" style="width:100px" formaction="Completed" formmethod="post" />
+                </td>
+            }
+
+        }
+        @using (@Html.BeginForm("Index", "Patient", FormMethod.Post))
+        {
+            if (User.IsInRole("Receptionist"))
+            {
+                <td align="right">
+
+                    <input class="form-control" name="search" type="text" id="search" placeholder="" style="width:100px">
+                </td>
+                <td align="left">
+                    <input type="submit" class="form-control" value="Search" style="width:80px" />
+                </td>
+            }
+        }
+        @if (User.IsInRole("Receptionist"))
+        {
+            <td>
+                <p>
+
+                    @Html.ActionLink("Create New Patient", "Create", "Patient")
+
+                </p>
+            </td>
+        }
+
+    </tr>
+</table>
+<table class="table">
+    <tr>
+        <th>
+
+            Token
+
+        </th>
+        <th>
+
+            Details
+
+        </th>
+        <th>
+            Mobile/UID
+        </th>
+        @*<th>
+            Raised Date/Creation Date
+        </th>*@
+
+        <th>
+            Status
+        </th>
+
+        @if (User.IsInRole("Chemist"))
+        {
+            <th>
+                Prescription
+            </th>
+        }
+        @if (User.IsInRole("Cashier"))
+        {
+            <th>
+                Fee
+            </th>
+        }
+        @if (User.IsInRole("Cashier") || User.IsInRole("Chemist"))
+        {
+            if (ViewData["DateType"].ToString() == "CurrentDate")
+            {
+                if (@TempData["inventoryon"].ToString() == "false")
+                {
+                    <th>
+                        Check
+                    </th>
+                }
+                
+            }
+
+        }
+
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.token)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.patient_name) <text>c/o</text> @Html.DisplayFor(modelItem => item.patient_care_of)<br />
+        @Html.DisplayFor(modelItem => item.patient_gender) <text>/</text> @Html.DisplayFor(modelItem => item.patient_age)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.patient_mobile) <br /> @Html.DisplayFor(modelItem => item.patient_id)
+    </td>
+    
+    <td>
+        Doc
+        <br />
+        -
+        <br />
+        -
+    </td>
+    @if (User.IsInRole("Chemist"))
+    {
+        <td>
+            @Html.ActionLink("ViewPresc", "Index", "Image", new { @item.id, @item.patient }, new { @item.id, @item.patient })
+        </td>
+    }
+    @if (User.IsInRole("Cashier"))
+    {
+        <td>
+            @Html.DisplayFor(modelItem => item.fee)
+        </td>
+    }
+    @if (ViewData["DateType"].ToString() == "CurrentDate")
+    {
+
+        if (User.IsInRole("Chemist") && User.IsInRole("Cashier"))
+        {
+            if (@TempData["inventoryon"].ToString() == "false")
+            {
+                <td>
+                    <a class="modal-link" data-id="@item.id" data-toggle="modal" data-target=".bootstrapmodal">OK</a>
+                </td>
+            }
+        }
+        else if (User.IsInRole("Chemist"))
+        {
+            if (@TempData["inventoryon"].ToString() == "false")
+            {
+                using (@Html.BeginForm("SubmitChemist", "Appointment", FormMethod.Post))
+                {
+                    <td>
+                        <input type="hidden" class="form-control" name="appid" id="appd" value="@item.id" />
+
+                        <input type="submit" class="form-control" value="OK" style="width:80px" />
+                    </td>
+                }
+            }
+        }
+        else if (User.IsInRole("Cashier"))
+        {
+            <td>
+                <a class="modal-link-feeonly" data-id="@item.id" data-toggle="modal" data-target=".bootstrapmodalFeeOnly">OK</a>
+            </td>
+        }
+
+    }
+
+</tr>
+    }
+
+</table>
+@using (Html.BeginForm("CashierChemistUpdate", "Appointment", FormMethod.Post))
+{
+    <div class="form-horizontal">
+        <div class="modal fade bootstrapmodal">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button data-dismiss="modal" class="close"><span>&times;</span></button>
+                        Please Select Mode of Payment
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                Mode of Payment
+                            </div>
+
+                            <div class="col-md-5">
+                                <select name="modeofpayment" id="modeofpayment">
+                                    <option value="Cash">Cash</option>
+                                    <option value="Debit Card">Debit Card</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="PayTm">PayTm</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <input type="hidden" class="form-control" name="appointmentAutoId" id="appointmentAutoId" value="" />
+
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@using (Html.BeginForm("SubmitCashier", "Appointment", FormMethod.Post))
+{
+    <div class="form-horizontal">
+        <div class="modal fade bootstrapmodalFeeOnly">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button data-dismiss="modal" class="close"><span>&times;</span></button>
+                        Please Select Mode of Payment
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                Mode of Payment
+                            </div>
+
+                            <div class="col-md-5">
+                                <select name="modeofpaymentFee" id="modeofpaymentFee">
+                                    <option value="Cash">Cash</option>
+                                    <option value="Debit Card">Debit Card</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="PayTm">PayTm</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <input type="hidden" class="form-control" name="appointmentAutoIdFee" id="appointmentAutoIdFee" value="" />
+
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

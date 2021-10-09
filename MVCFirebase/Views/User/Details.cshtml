@@ -1,0 +1,139 @@
+﻿@model MVCFirebase.Models.User
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.clinicmobilenumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.clinicmobilenumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mobile_number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mobile_number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.password)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RememberMe)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RememberMe)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.user_qualification)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.user_qualification)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.creation_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.creation_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.idproof)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.idproof)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.signature)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.signature)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.status_enable)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.status_enable)
+        </dd>
+
+    </dl>
+</div>
+<div style="padding-right:15px;margin-left:200px">
+    <input id="Admin" type="checkbox" name="userrole" checked="@ViewData["admin"]" value="Admin" />
+    <label for="Admin">
+        Admin
+    </label>
+</div>
+<div style="padding-right:15px;margin-left:200px">
+    <input id="Doctor" type="checkbox" name="userrole" checked="@ViewData["Doctor"]" value="Doctor" />
+    <label for="Doctor">
+        Doctor
+    </label>
+</div>
+<div style="padding-right:15px;margin-left:200px">
+    <input id="Receptionist" type="checkbox" name="userrole" checked="@ViewData["Receptionist"]" value="Receptionist" />
+    <label for="Receptionist">
+        Receptionist
+    </label>
+</div>
+<div style="padding-right:15px;margin-left:200px">
+    <input id="Chemist" type="checkbox" name="userrole" checked="@ViewData["Chemist"]" value="Chemist" />
+    <label for="Chemist">
+        Chemist
+    </label>
+</div>
+<div style="padding-right:15px;margin-left:200px">
+    <input id="Cashier" type="checkbox" name="userrole" checked="@ViewData["Cashier"]" value="Cashier" />
+    <label for="Cashier">
+        Cashier
+    </label>
+</div>
+
+
+<br />
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
